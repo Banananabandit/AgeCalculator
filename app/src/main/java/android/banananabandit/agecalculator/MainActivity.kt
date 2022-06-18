@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import org.w3c.dom.Text
 import java.util.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val units = arrayOf<String?>("Months", "Weeks", "Days", "Hours", "Minutes")
-    lateinit var measureUnits : TextView
-    lateinit var birthdayUnits : TextView
+    private lateinit var measureUnits : TextView
+    private lateinit var birthdayUnits : TextView
+    private lateinit var dateSelected : TextView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         measureUnits = findViewById(R.id.age_measure_unit)
         birthdayUnits = findViewById(R.id.birthday_measure_unit)
+        dateSelected = findViewById(R.id.date_selected)
 
         val buttonDatePicker = findViewById<Button>(R.id.button_age_selection)
         val spinner = findViewById<Spinner>(R.id.units_selector)
@@ -47,8 +51,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         var day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this,
-                DatePickerDialog.OnDateSetListener{ view, year, month, day ->
+                DatePickerDialog.OnDateSetListener{ view, yearSelected, monthSelected, daySelected ->
                     //Logic goes here
+                    dateSelected.text = "Date Selected: $daySelected/${monthSelected + 1}/$yearSelected"
                     Toast.makeText(this, "Hell", Toast.LENGTH_SHORT).show()
                 },
                 year,
