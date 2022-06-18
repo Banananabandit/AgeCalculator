@@ -1,9 +1,11 @@
 package android.banananabandit.agecalculator
 
+import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -19,8 +21,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         measureUnits = findViewById(R.id.age_measure_unit)
         birthdayUnits = findViewById(R.id.birthday_measure_unit)
 
+        val buttonDatePicker = findViewById<Button>(R.id.button_age_selection)
         val spinner = findViewById<Spinner>(R.id.units_selector)
+
         spinner.onItemSelectedListener = this
+        buttonDatePicker.setOnClickListener{
+            buttonDatePicker()
+        }
 
         val spinnerAdapter : ArrayAdapter<*> = ArrayAdapter<Any?>(
             this, android.R.layout.simple_spinner_item, units
@@ -31,6 +38,23 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         )
         spinner.adapter = spinnerAdapter
 
+    }
+
+    fun buttonDatePicker() {
+        val calendar = Calendar.getInstance()
+        var year = calendar.get(Calendar.YEAR)
+        var month = calendar.get(Calendar.MONTH)
+        var day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(this,
+                DatePickerDialog.OnDateSetListener{ view, year, month, day ->
+                    //Logic goes here
+                    Toast.makeText(this, "Hell", Toast.LENGTH_SHORT).show()
+                },
+                year,
+                month,
+                day
+            ).show()
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -46,4 +70,5 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(p0: AdapterView<*>?) {
         TODO("Not yet implemented")
     }
+
 }
