@@ -3,15 +3,21 @@ package android.banananabandit.agecalculator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
+    private val units = arrayOf<String?>("Months", "Weeks", "Days", "Hours", "Minutes")
+    lateinit var measureUnits : TextView
+    lateinit var birthdayUnits : TextView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        measureUnits = findViewById(R.id.age_measure_unit)
+        birthdayUnits = findViewById(R.id.birthday_measure_unit)
 
         val spinner = findViewById<Spinner>(R.id.units_selector)
         spinner.onItemSelectedListener = this
@@ -26,9 +32,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinner.adapter = spinnerAdapter
 
     }
-    var units = arrayOf<String?>("Months", "Weeks", "Days", "Hours", "Minutes")
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        //Logic to change the unit of measure goes here
+        measureUnits.text = units[position]
+        birthdayUnits.text = units[position]
+
         Toast.makeText(applicationContext,
             units[position],
             Toast.LENGTH_SHORT).show()

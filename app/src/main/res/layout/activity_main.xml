@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="minutes"
-        android:id="@+id/age_measur_unit"
+        android:id="@+id/age_measure_unit"
         android:textSize="23sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"/>
@@ -62,14 +62,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/birthday_measure_unit"
             android:layout_marginLeft="8dp"
-            android:text="minutes "
+            android:text="minutes"
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="until BD"
+            android:text=" until BD"
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
@@ -90,6 +90,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/button_age_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="select date" />
 
 
 </LinearLayout>
