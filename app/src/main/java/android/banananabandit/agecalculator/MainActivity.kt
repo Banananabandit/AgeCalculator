@@ -10,15 +10,16 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    val units = arrayOf<String?>("Days", "Hours", "Minutes")
+    private val units = arrayOf<String?>("Days", "Hours", "Minutes")
     private lateinit var textViewMeasureUnits : TextView
     private lateinit var textViewBirthdayUnits : TextView
     private lateinit var textViewDateSelected : TextView
     private lateinit var textViewAgeDisplay : TextView
 
+    private var timePassed : Long? = 0
     private var chosenUnits : String? = null
-
-
+    private var timePassedInMillis : Long? = 0
+    private var selectedDate : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,67 +49,61 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    fun buttonDatePicker() {
+    private fun buttonDatePicker() {
         val calendar = Calendar.getInstance()
-        var year = calendar.get(Calendar.YEAR)
-        var month = calendar.get(Calendar.MONTH)
-        var day = calendar.get(Calendar.DAY_OF_MONTH)
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        DatePickerDialog(this,
-                DatePickerDialog.OnDateSetListener{ view, yearSelected, monthSelected, daySelected ->
-                    val selectedDate = "$daySelected/${monthSelected + 1}/$yearSelected"
-                    textViewDateSelected.text = "Date Selected: $selectedDate"
+        val datePicker = DatePickerDialog(this,
+            DatePickerDialog.OnDateSetListener{ view, yearSelected, monthSelected, daySelected ->
+                selectedDate = "$daySelected/${monthSelected + 1}/$yearSelected"
+                textViewDateSelected.text = "Date Selected: $selectedDate"
 
-                    val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+                val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
 
-                    val theDate = simpleDateFormat.parse(selectedDate)
-                    Toast.makeText(this, "Hell", Toast.LENGTH_SHORT).show()
+                val theDate = simpleDateFormat.parse(selectedDate)
 
-                    // The getTime() method returns you the time in milliseconds- to conver the millis to seconds we need to divide by 1000
-                    // To get from seconds to minutes we need to divide by 60 - so all together it is 60000 and so on for the conversion
-
-                    // Here we are just getting the time difference in millis so that we can easily convert it to the units we need
+                // Use the let operator to make sure that the text which is within doesn't execute
+                theDate?.let {
                     val selectedTimeInMillis = theDate.time
-                    val currentTimeInMillis= simpleDateFormat.parse(simpleDateFormat.format(System.currentTimeMillis())).time
-
-                    val timePassedInMillis = currentTimeInMillis - selectedTimeInMillis
-
-                    when(chosenUnits) {
-                        "Days" -> {
-                            val timePassedInDays = timePassedInMillis / 86400000
-                            textViewAgeDisplay.text = timePassedInDays.toString()
-                        }
-                        "Hours" -> {
-                            val timePassedInHours = timePassedInMillis / 3600000
-                            textViewAgeDisplay.text = timePassedInHours.toString()
-                        }
-                        "Minutes" -> {
-                            val timePassedInMinutes = timePassedInMillis / 60000
-                            textViewAgeDisplay.text = timePassedInMinutes.toString()
-                        }
-                        else -> textViewAgeDisplay.text = "Choose"
+                    val currentTimeInMillis = simpleDateFormat.parse(simpleDateFormat.format(System.currentTimeMillis())).time
+                    currentTimeInMillis.let {
+                        timePassedInMillis = currentTimeInMillis - selectedTimeInMillis
+                        unitOfMeasureSelected()
                     }
-                },
-                year,
-                month,
-                day
-            ).show()
+                }
+            },
+            year,
+            month,
+            day
+        )
+        datePicker.datePicker.maxDate = System.currentTimeMillis() - 86400
+        datePicker.show()
     }
-    fun unitOfMeasureSelected(position: Int) {
-
+    private fun unitOfMeasureSelected() {
+        when(chosenUnits) {
+            "Days" -> {
+                timePassed = timePassedInMillis!! / 86400000
+                textViewAgeDisplay.text = timePassed.toString()
+            }
+            "Hours" -> {
+                timePassed = timePassedInMillis!! / 3600000
+                textViewAgeDisplay.text = timePassed.toString()
+            }
+            "Minutes" -> {
+                timePassed = timePassedInMillis!! / 60000
+                textViewAgeDisplay.text = timePassed.toString()
+            }
+        }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        //Logic to change the unit of measure goes here
         textViewMeasureUnits.text = units[position]
         textViewBirthdayUnits.text = units[position]
 
-        // This will set our global variable for the choice that we can use in the when statement
         chosenUnits = units[position]
-
-        Toast.makeText(applicationContext,
-            units[position],
-            Toast.LENGTH_SHORT).show()
+        unitOfMeasureSelected()
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
